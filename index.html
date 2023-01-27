@@ -1,0 +1,194 @@
+<script
+	type="text/javascript"
+    async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML"
+></script>
+<script>
+    var z = 0, y = 0
+    function recalc() {
+        var v = parseFloat(document.getElementById('donthave').value)
+        var w = parseFloat(document.getElementById('leftgacha').value)
+        document.getElementById('pnew').innerHTML = 100 * (1 - Math.pow(0.993 - 0.053 * v / 54, 10))
+        document.getElementById('pnleft').innerHTML = (0.007 + 0.053 * v / 54) * w
+        document.getElementById('pleft').innerHTML = 0.06 * w
+        document.getElementById('ppleft').innerHTML = 0.007 * w
+        var p = 100 * (z + 0.06 * w) / 12 - 100
+        var q = 100 * (y + 0.007 * w) / 1.4 - 100
+        document.getElementById('rleft').innerHTML = p
+        document.getElementById('cget').innerHTML = Math.round(p * 240)
+        if (p > 0) {
+            document.getElementById('cget').innerHTML = "+" + document.getElementById('cget').innerHTML
+            document.getElementById('cget').style.color = "green"
+        }
+        else if (p < 0) document.getElementById('cget').style.color = "red"
+        else document.getElementById('cget').style.color = "black"
+        document.getElementById('rpleft').innerHTML = q
+        document.getElementById('cpget').innerHTML = Math.round(q * 240)
+        if (q > 0) {
+            document.getElementById('cpget').innerHTML = "+" + document.getElementById('cpget').innerHTML
+            document.getElementById('cpget').style.color = "green"
+        }
+        else if (q < 0) document.getElementById('cpget').style.color = "red"
+        else document.getElementById('cpget').style.color = "black"
+        var t = Math.round(p * 240 + q * 240)
+        document.getElementById('allget').innerHTML = t
+        if (t > 0) {
+            document.getElementById('allget').innerHTML = "+" + document.getElementById('allget').innerHTML
+            document.getElementById('allget').style.color = "green"
+        }
+        else if (t < 0) document.getElementById('allget').style.color = "red"
+        else document.getElementById('allget').style.color = "black"
+    }
+    recalc()
+</script>
+
+<h1>가챠 관리툴</h1>
+
+<h2>현재 진행상황: </h2>
+미보유 학생 수(x): <input id="donthave" type="number" value = "10" onchange="recalc()">
+남은 가챠 횟수(y): <input id="leftgacha" type="number" value = "200" onchange="recalc()">
+<input id="d10cha" type="button" value = "-10" onclick="
+    var w = parseInt(document.getElementById('leftgacha').value)
+    document.getElementById('leftgacha').value = w - 10
+    recalc()
+">
+
+<br>
+<br>
+3성 등장수(z), 픽업 등장수(w)
+<div id="picked"></div>
+추가: <input id="new" list="students" onchange="
+    let picked = document.getElementById('picked')
+    let card = document.createElement('img');
+    card.src = `students\\${document.getElementById('new').value}.webp`
+    picked.appendChild(card)
+    if (document.getElementById('new').value == '수시노') {
+        z++, y++
+    }
+    else {
+        z++
+    }
+    document.getElementById('new').value = ''
+    recalc()
+">
+
+<h2>다음 10챠에:</h2>
+3성이 뜰 확률: \(1-0.94^{10}\) = 46.138488590510065%
+<br>
+NEW가 뜰 확률: \(1-(0.993-\frac{0.053x}{54})^{10}\) = <span id="pnew"></span>%
+<br>
+픽업이 뜰 확률: \(1-0.993^{10}\) = 6.783566000075636%
+
+<h2>남은 연챠에서:</h2>
+3성 개수 기댓값: \(0.06y\) = <span id="pleft"></span>개
+<br>
+픽업 개수 기댓값: \(0.007y\) = <span id="ppleft"></span>개
+<br>
+NEW 개수 기댓값: \((0.007+\frac{0.053x}{54})y\) = <span id="pnleft"></span>개
+
+<h2>이대로 끝난다면:</h2>
+3성 이득률: \(\frac{z+0.06y}{12}-1\) = <span id="rleft"></span>% (<img id="cr" src="crystal.png"> <span id="cget"></span>)
+<br>
+픽업 이득률: \(\frac{w+0.007y}{1.4}-1\) = <span id="rpleft"></span>% (<img id="cr" src="crystal.png"> <span id="cpget"></span>)
+<br>
+<br>
+종합 손익: <img id="cr" src="crystal.png"> <span id="allget"></span>
+
+<style>
+#picked {
+    border: skyblue solid 2px;
+    border-radius: 5px;
+    height: 110px;
+    width: 1800px;
+}
+input {
+    border: skyblue solid 2px;
+    border-radius: 5px;
+    height: 30px;
+    width: 100px;
+    background-color: rgb(205, 238, 252);
+}
+#d10cha {
+    width: 35px;
+    background-color: rgb(235, 205, 252);
+    border: rgb(190, 132, 228) solid 2px;
+}
+img {
+    margin-top: 10px;
+    margin-left: 10px;
+    height: 90px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px black;
+}
+#cr {
+    height: 32px;
+    box-shadow: none;
+}
+#cget {
+    font-size: 25px;
+}
+#cpget {
+    font-size: 25px;
+}
+#allget {
+    font-size: 30px;
+}
+</style>
+
+<datalist id="students">
+    <option value="나츠">
+    <option value="네루">
+    <option value="로리슌">
+    <option value="마리나">
+    <option value="마시로">
+    <option value="마키">
+    <option value="미도리">
+    <option value="미모리">
+    <option value="미사키">
+    <option value="미야코">
+    <option value="미유">
+    <option value="바스나">
+    <option value="사사야">
+    <option value="사야">
+    <option value="사키">
+    <option value="세나">
+    <option value="수노미">
+    <option value="수시노">
+    <option value="수카모">
+    <option value="수후미">
+    <option value="슌">
+    <option value="스미레">
+    <option value="시로코">
+    <option value="아루">
+    <option value="아리스">
+    <option value="아즈사">
+    <option value="아츠코">
+    <option value="아츠코">
+    <option value="에이미">
+    <option value="온나츠">
+    <option value="온도카">
+    <option value="온리노">
+    <option value="와카모">
+    <option value="우이">
+    <option value="운로코">
+    <option value="유즈">
+    <option value="이로하">
+    <option value="이오리">
+    <option value="이즈나">
+    <option value="이즈미">
+    <option value="정월세리카">
+    <option value="체리노">
+    <option value="츠루기">
+    <option value="츠쿠요">
+    <option value="치히로">
+    <option value="카린">
+    <option value="카에데">
+    <option value="코하루">
+    <option value="하루나">
+    <option value="호시노">
+    <option value="히나타">
+    <option value="히나타">
+    <option value="히비키">
+    <option value="히요리">
+    <option value="히후미">
+</datalist>

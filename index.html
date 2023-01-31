@@ -1,3 +1,4 @@
+<meta charset="utf8">
 <script
 	type="text/javascript"
     async
@@ -5,6 +6,13 @@
 ></script>
 <script>
     var z = 0, y = 0
+    var tenp = [1, 10, 45, 120, 210, 252, 210, 120, 45, 10, 1]
+    function p2(n, x) {
+        var ans = 0
+        for (var k = n; k <= 10; k++)
+            ans += tenp[n] * Math.pow(0.007 + 0.053*x/54, k) * Math.pow(0.993 - 0.053*x/54, 10 - k)
+        return ans * 100
+    }
     function recalc() {
         var v = parseFloat(document.getElementById('donthave').value)
         var w = parseFloat(document.getElementById('leftgacha').value)
@@ -12,6 +20,9 @@
         document.getElementById('pnleft').innerHTML = (0.007 + 0.053 * v / 54) * w
         document.getElementById('pleft').innerHTML = 0.06 * w
         document.getElementById('ppleft').innerHTML = 0.007 * w
+        document.getElementById('p2_2').innerHTML = p2(2, v)
+        document.getElementById('p2_3').innerHTML = p2(3, v)
+        document.getElementById('p2_4').innerHTML = p2(4, v)
         var p = 100 * (z + 0.06 * w) / 12 - 100
         var q = 100 * (y + 0.007 * w) / 1.4 - 100
         document.getElementById('rleft').innerHTML = p
@@ -42,9 +53,10 @@
     recalc()
 </script>
 
-<h1>가챠 관리툴</h1>
+<strong>
+<h1>가챠 중계툴</h1>
 
-<h2>현재 진행상황: </h2>
+<h2>현재 진행상황</h2>
 미보유 학생 수(x): <input id="donthave" type="number" value = "10" onchange="recalc()">
 남은 가챠 횟수(y): <input id="leftgacha" type="number" value = "200" onchange="recalc()">
 <input id="d10cha" type="button" value = "-10" onclick="
@@ -72,29 +84,47 @@
     recalc()
 ">
 
-<h2>다음 10챠에:</h2>
-3성이 뜰 확률: \(1-0.94^{10}\) = 46.138488590510065%
+<h2>다음 10챠에</h2>
+3성이 뜰 확률: \(1-0.94^{10}\) = 46.138488590510065% 
+<br>
+3성 N장 이상 뜰 확률: \(P_1(n)=\sum_{k=n}^{10}{\binom{10}{k}{0.06}^{k}{0.94}^{10-k}}\)
+<br>
+\(P_1(2)\) = 11.758800456793027%
+\(P_1(3)\) = 1.8837836524275056%
+\(P_1(4)\) = 0.2029297282801827%
+<br>
 <br>
 NEW가 뜰 확률: \(1-(0.993-\frac{0.053x}{54})^{10}\) = <span id="pnew"></span>%
 <br>
+NEW가 N장 이상 뜰 확률: \(P_2(n)=\sum_{k=n}^{10}{\binom{10}{k}{(0.007+\frac{0.053x}{54})}^{k}{(0.993-\frac{0.053x}{54})}^{10-k}}\)
+<br>
+\(P_2(2)\) = <span id="p2_2"></span>%,
+\(P_2(3)\) = <span id="p2_3"></span>%,
+\(P_2(4)\) = <span id="p2_4"></span>%
+<br>
+<br>
 픽업이 뜰 확률: \(1-0.993^{10}\) = 6.783566000075636%
 
-<h2>남은 연챠에서:</h2>
+<h2>남은 연챠에서</h2>
 3성 개수 기댓값: \(0.06y\) = <span id="pleft"></span>개
 <br>
 픽업 개수 기댓값: \(0.007y\) = <span id="ppleft"></span>개
 <br>
 NEW 개수 기댓값: \((0.007+\frac{0.053x}{54})y\) = <span id="pnleft"></span>개
 
-<h2>이대로 끝난다면:</h2>
+<h2>천장 결과</h2>
 3성 이득률: \(\frac{z+0.06y}{12}-1\) = <span id="rleft"></span>% (<img id="cr" src="crystal.png"> <span id="cget"></span>)
 <br>
 픽업 이득률: \(\frac{w+0.007y}{1.4}-1\) = <span id="rpleft"></span>% (<img id="cr" src="crystal.png"> <span id="cpget"></span>)
 <br>
 <br>
 종합 손익: <img id="cr" src="crystal.png"> <span id="allget"></span>
+</strong>
 
 <style>
+body {
+    padding-left: 50px;
+}
 #picked {
     border: skyblue solid 2px;
     border-radius: 5px;
